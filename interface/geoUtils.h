@@ -58,11 +58,11 @@ void fillexp (TH1F* theta, double f0, double fL, double fR) ;
 double deltaPhi (double phi1, double phi2) ;
 
 //rotates p into the frame with W along Z axis
-void rotIntoW (TLorentzVector & p, TLorentzVector W) ;
+void rotIntoW (TLorentzVector & p, const TLorentzVector & W) ;
 
-void boostIntoW (TLorentzVector & p, TLorentzVector W) ;
+void boostIntoW (TLorentzVector & p, const TLorentzVector & W) ;
 
-void printTLV (TString aa , TLorentzVector ff) ;
+void printTLV (TString aa , const TLorentzVector & ff) ;
 
 #endif
 

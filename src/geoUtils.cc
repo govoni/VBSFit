@@ -151,7 +151,7 @@ double deltaPhi (double phi1, double phi2){
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
-void rotIntoW (TLorentzVector & p, TLorentzVector W){ //rotates p into the frame with W along Z axis
+void rotIntoW (TLorentzVector & p, const TLorentzVector & W){ //rotates p into the frame with W along Z axis
     p.RotateZ(-W.Phi());
     p.RotateY(-W.Theta()); 
     return;
@@ -161,7 +161,7 @@ void rotIntoW (TLorentzVector & p, TLorentzVector W){ //rotates p into the frame
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
-void boostIntoW (TLorentzVector & p, TLorentzVector W){
+void boostIntoW (TLorentzVector & p, const TLorentzVector & W){
     double beta = W.Beta();
     double pp = pow(W.Px()*W.Px() +W.Py()*W.Py()+W.Pz()*W.Pz(), 0.5);
     TVector3 ww (beta*W.Px()/pp, beta*W.Py()/pp, beta*W.Pz()/pp);       
@@ -173,7 +173,7 @@ void boostIntoW (TLorentzVector & p, TLorentzVector W){
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
-void printTLV (TString aa , TLorentzVector ff){
+void printTLV (TString aa , const TLorentzVector & ff){
     std::cout << aa << " =\t( " << ff.E() << "  \t,  " << ff.Px() << "  \t,  " << ff.Py() << "  \t,  " << ff.Pz() <<")\n";
     return;
 }
