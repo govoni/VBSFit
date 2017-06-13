@@ -15,7 +15,8 @@ class hFactory
     ~hFactory () ;
 
     void add_h1 (TString baseName, TString baseTitle, 
-                 int nbins, double min, double max, int NUM) ;
+                 int nbins, double min, double max, int NUM,
+                 bool saveNtuple = false) ;
 
     template <class UnaryFunction>
     void applyToAll (UnaryFunction function) 

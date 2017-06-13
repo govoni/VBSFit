@@ -1,8 +1,10 @@
 #include "hChain.h"
 
 hChain::hChain (TString baseName, TString baseTitle, 
-                int nbins, double min, double max, int NUM) :
-  m_baseName (baseName)
+                int nbins, double min, double max, int NUM,
+                bool saveNtuple) :
+  m_baseName (baseName),
+  m_saveNtuple (saveNtuple)
   {
     for (int i=0 ; i<NUM ; ++i)
       {
@@ -14,11 +16,14 @@ hChain::hChain (TString baseName, TString baseTitle,
         TH1F * dummy = new TH1F (name,title,nbins,min,max) ;
         m_histos.push_back (dummy) ;
         
-        name = TString ("n_") ;
-        name += i ;
-        name += TString ("_") + m_baseName ;
-        TNtuple * ndummy = new TNtuple (name, title, "var:weight") ;
-        m_ntuples.push_back (ndummy) ;
+        if (m_saveNtuple)
+          {
+            name = TString ("n_") ;
+            name += i ;
+            name += TString ("_") + m_baseName ;
+            TNtuple * ndummy = new TNtuple (name, title, "var:weight") ;
+            m_ntuples.push_back (ndummy) ;
+          }
       }
   }
 
@@ -30,8 +35,11 @@ hChain::~hChain ()
 {
   for (unsigned int i=0 ; i<m_histos.size () ; ++i)
     delete m_histos.at (i) ;
-  for (unsigned int i=0 ; i<m_ntuples.size () ; ++i)
-    delete m_ntuples.at (i) ;  
+  if (m_saveNtuple)
+    {
+      for (unsigned int i=0 ; i<m_ntuples.size () ; ++i)
+        delete m_ntuples.at (i) ;  
+    }
 }  
 
 
@@ -57,7 +65,7 @@ void
 hChain::Fill (int i, double val, double weight) 
   {
     m_histos.at (i)->Fill (val, weight) ;
-    m_ntuples.at (i)->Fill (val, weight) ;
+    if (m_saveNtuple) m_ntuples.at (i)->Fill (val, weight) ;
     return ;
   }
 
@@ -144,8 +152,11 @@ hChain::Write (TFile & outputFile)
     outputFile.cd () ;
     for (unsigned int i=0 ; i<m_histos.size () ; ++i)
       m_histos.at (i)->Write () ;
-    for (unsigned int i=0 ; i<m_ntuples.size () ; ++i)
-      m_ntuples.at (i)->Write () ;
+    if (m_saveNtuple)
+      {
+        for (unsigned int i=0 ; i<m_ntuples.size () ; ++i)
+          m_ntuples.at (i)->Write () ;
+      }
     return ;
   }
 

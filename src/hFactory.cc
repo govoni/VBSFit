@@ -6,7 +6,7 @@
 hFactory::hFactory (std::string fileName, 
                     bool print) :
  m_fileName (fileName) ,
- m_print (print)                     
+ m_print (print)
 {}
 
 
@@ -43,7 +43,7 @@ hFactory::~hFactory ()
 
 void
 hFactory::add_h1 (TString baseName, TString baseTitle, 
-                  int nbins, double min, double max, int NUM) 
+                  int nbins, double min, double max, int NUM, bool saveNtuple) 
 {
   if (m_H1content.find (baseName) != m_H1content.end ())
     {
@@ -52,7 +52,7 @@ hFactory::add_h1 (TString baseName, TString baseTitle,
       return ;                
     }
   hChain * dummy = new hChain (baseName, baseTitle, 
-                               nbins, min, max, NUM) ;
+                               nbins, min, max, NUM, saveNtuple) ;
   m_H1content[baseName] = dummy ;     
   return ;                          
 }

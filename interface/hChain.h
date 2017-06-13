@@ -13,7 +13,8 @@
 struct hChain 
 {
   hChain (TString baseName, TString baseTitle, 
-          int nbins, double min, double max, int NUM) ;          
+          int nbins, double min, double max, int NUM,
+          bool saveNtuple = false) ;          
   ~hChain () ;
   
   void SetColors (std::vector<int> colors) ;
@@ -28,6 +29,7 @@ struct hChain
     TString m_baseName ;
     std::vector <TH1F*> m_histos ;
     std::vector <TNtuple*> m_ntuples ;
+    bool m_saveNtuple ;
 
     double findNMin () ;  
     double findNMax () ;
