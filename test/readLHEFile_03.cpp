@@ -3,6 +3,7 @@ read a LHE file extracting the lorentz vectors of the initial and final state pa
 as well as their charge, using a config file that contains the relevant information
 for the origin file, the cross-section, the number of events to be read.
 Operate on e mu final state, test of the rotations.
+Fill the cos(theta) histogram for the rotated lepton.
 */
 
 #include "LHEF.h"
@@ -30,6 +31,7 @@ Operate on e mu final state, test of the rotations.
 #include "CfgParser.h"
 #include "legendre.h"
 #include "geoUtils.h"
+#include "hFactory.h"
 
 using namespace std ;
 
@@ -133,13 +135,27 @@ int main (int argc, char **argv)
 
   CfgParser * gConfigParser = new CfgParser (argv[1]) ;
 
-  vector<string> samplesList = gConfigParser->readStringListOpt ("general::samplesList") ;
+  vector<string> samplesList = gConfigParser->readStringListOpt ("general", "samplesList") ;
 
-   //PG loop over samples
+  gROOT->SetStyle ("Plain") ;
+
+  string outputFileName = gConfigParser->readStringOpt ("general", "outputFile") ; 
+  hFactory H1fact (outputFileName, true) ;
+  int numOfHistos = 1 ;
+  
+  for (unsigned int i = 0 ; i < samplesList.size () ; ++i)
+    {
+      string histoName = samplesList.at (i) + "_cosThetaEl" ;
+      H1fact.add_h1 (histoName, histoName, 200, -1, 1, numOfHistos) ;
+      histoName = samplesList.at (i) + "_cosThetaMu" ;
+      H1fact.add_h1 (histoName, histoName, 200, -1, 1, numOfHistos) ;
+    }
+
+  //PG loop over samples
   for (unsigned int i = 0 ; i < samplesList.size () ; ++i)
       {
 
-      TString sampleName = gConfigParser->readStringOpt (samplesList.at (i), "LHEfile") ;
+      TString sampleName  = gConfigParser->readStringOpt (samplesList.at (i), "LHEfile") ;
       int maxEvents       = gConfigParser->readIntOpt (samplesList.at (i), "maxEvents") ;    
       int maxSelEvents    = gConfigParser->readIntOpt (samplesList.at (i), "maxSelEvents") ;    
       double crossSection = gConfigParser->readFloatOpt (samplesList.at (i), "crossSection") ;    
@@ -207,6 +223,9 @@ int main (int argc, char **argv)
           TLorentzVector TLV_We_lab = *TLV_el_lab + *TLV_ve_lab ;      
           TLorentzVector TLV_Wm_lab = *TLV_mu_lab + *TLV_vm_lab ;      
 
+          //PG apply any selections here!
+          //PG ---- ---- ---- ---- ---- ---- ---- ---- ----
+
           //PG rotate leptons, build rotated W's, boost leptons, 
           //PG to obtain the leptons in the W frame (_rot)
 
@@ -228,7 +247,8 @@ int main (int argc, char **argv)
           boostIntoW (TLV_mu_rot, TLV_Wm_rot);
           boostIntoW (TLV_vm_rot, TLV_Wm_rot);                       
 
-
+          H1fact.Fill (samplesList.at (i) + "_cosThetaEl", 0, cos (TLV_el_rot.Theta ())) ;
+          H1fact.Fill (samplesList.at (i) + "_cosThetaMu", 0, cos (TLV_mu_rot.Theta ())) ;
 
         } //PG loop over events
 
