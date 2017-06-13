@@ -1,6 +1,7 @@
 /**
 read a LHE file extracting the lorentz vectors of the initial and final state particles,
-as well as their charge
+as well as their charge, using a config file that contains the relevant information
+for the origin file, the cross-section, the number of events to be read
 */
 
 #include "LHEF.h"
@@ -8,6 +9,7 @@ as well as their charge
 #include "TH1.h"
 #include "TH2.h"
 #include "TFile.h"
+#include "TString.h"
 #include "THStack.h"
 #include "TCanvas.h"
 #include "TStyle.h"
@@ -24,6 +26,7 @@ as well as their charge
 #include <algorithm>
 
 #include "LHEUtils.h"
+#include "CfgParser.h"
 
 using namespace std ;
 
@@ -123,55 +126,78 @@ void readLHEEvent (LHEF::Reader & reader,
     return ;  
   }
 
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
 
 int main (int argc, char **argv) 
 {
-  string sampleName = argv[1] ;	
-  cout << "reading " << sampleName << endl ;
-  std::ifstream ifs (sampleName.c_str ()) ;
-  LHEF::Reader reader (ifs) ;
-
-  int maxevents = -1 ;
-  if (argc > 2) maxevents = atoi (argv[2]) ;
-
-  cout << "reading " << maxevents << " events\n" ; 
-
-  int ieve = 0 ;
-  // loop over events
-  while ( reader.readEvent () ) 
+  // check number of inpt parameters
+  if (argc < 2)
     {
-      if (ieve % 10000 == 0) std::cout << "event " << ieve << "\n" ;
-      if (maxevents > 0 && ieve >= maxevents) break ;
-      ++ieve;
+      cerr << "Forgot to put the cfg file --> exit " << endl ;
+      return 1 ;
+    }
 
-      vector<part> higgs ;      
-      vector<part> finalJets ;      
-      vector<part> initialQuarks ;      
-      vector<part> finalQuarks ;      
-      vector<part> finalGluon ;      
-      vector<part> finalLeptons ;      
-      vector<part> finalNeutrinos ;
+  CfgParser * gConfigParser = new CfgParser (argv[1]) ;
 
-      readLHEEvent (reader,
-                    higgs,     
-                    finalJets,   
-                    initialQuarks,    
-                    finalQuarks,     
-                    finalGluon,      
-                    finalLeptons,    
-                    finalNeutrinos  
-                   ) ;
-      cout << finalJets.size ()
-           << "\t" << finalLeptons.size () 
-//           << "\t\t" << finalLeptons.at (0).p.P() << "\t" << finalLeptons.at (0).q
-           << "\t\t" << finalLeptons.at (1).p.P() << "\t" << finalLeptons.at (1).q
-           << "\t" << finalNeutrinos.size () 
-           << "\n" ;
+  vector<string> samplesList = gConfigParser->readStringListOpt ("general::samplesList") ;
 
-    } // loop over events
+   //PG loop over samples
+  for (unsigned int i = 0 ; i < samplesList.size () ; ++i)
+      {
 
+      TString sampleName = gConfigParser->readStringOpt (samplesList.at (i), "LHEfile") ;
+      int maxEvents       = gConfigParser->readIntOpt (samplesList.at (i), "maxEvents") ;    
+      int maxSelEvents    = gConfigParser->readIntOpt (samplesList.at (i), "maxSelEvents") ;    
+      double crossSection = gConfigParser->readFloatOpt (samplesList.at (i), "crossSection") ;    
+
+      cout << "READING:\n" ;
+      cout << "  file:\t" << sampleName.Data () << endl ;
+      cout << "  maxEvents:\t " << maxEvents << endl ;
+      cout << "  maxSelEvents:\t" << maxSelEvents << endl ;
+      cout << "  crossSection:\t" << crossSection << endl ;
+
+      std::ifstream ifs (sampleName.Data ()) ;
+      LHEF::Reader reader (ifs) ;
+
+      int ieve = 0 ;
+      // loop over events
+      while ( reader.readEvent () ) 
+        {
+          if (ieve % 10000 == 0) std::cout << "  ... event " << ieve << "\n" ;
+          if (maxEvents > 0 && ieve >= maxEvents) break ;
+          ++ieve;
+
+          vector<part> higgs ;      
+          vector<part> finalJets ;      
+          vector<part> initialQuarks ;      
+          vector<part> finalQuarks ;      
+          vector<part> finalGluon ;      
+          vector<part> finalLeptons ;      
+          vector<part> finalNeutrinos ;
+
+          readLHEEvent (reader,
+                        higgs,     
+                        finalJets,   
+                        initialQuarks,    
+                        finalQuarks,     
+                        finalGluon,      
+                        finalLeptons,    
+                        finalNeutrinos  
+                       ) ;
+/*
+          cout << finalJets.size ()
+               << "\t" << finalLeptons.size () 
+               << "\t\t" << finalLeptons.at (1).p.P() << "\t" << finalLeptons.at (1).q
+               << "\t" << finalNeutrinos.size () 
+               << "\n" ;
+*/
+        } //PG loop over events
+
+      } //PG loop over samples 
+
+  delete gConfigParser ;
   return 0 ;
 }
 
