@@ -12,8 +12,13 @@
 
 ## to run
 
+ example of the use of the cfg file:
    * ./bin/cfg.exe ./config/example.cfg 
+
+ example on how to read a LHE file
    * ./bin/readLHEFile_02.exe config/readLHEFile_02.cfg 
+
+example on how to get the cos (Theta)
    * ./bin/readLHEFile_03.exe config/readLHEFile_03.cfg 
 
 ## to send modifications to git
