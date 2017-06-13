@@ -16,17 +16,6 @@ int main (int argc, char** argv)
 
   CfgParser * gConfigParser = new CfgParser (argv[1]) ;
 
-/*
-  TString config ; 
-  config.Form ("%s",argv[1]) ;
-  if (! (gConfigParser->init (config)))
-    {
-      cout << ">>> parseConfigFile::Could not open configuration file " << config << endl ;
-      return -1 ;
-    }
-*/
-
-
   string sTest          = gConfigParser->readStringOpt ("field::stringa") ;
   int iTest             = gConfigParser->readIntOpt ("field::intero") ;
   float fTest           = gConfigParser->readFloatOpt ("field::reale") ;

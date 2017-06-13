@@ -35,9 +35,9 @@ int main (int argc, char** argv)
   vector<float> fvTest  = gConfigParser->readFloatListOption ("field::floatlist") ;
   vector<string> svTest = gConfigParser->readStringListOption ("field::stringlist") ;
 
-  cout << sTest << endl ;
-  cout << iTest << endl ;
-  cout << fTest << endl ;
+  cout << "string:\t" << sTest << endl ;
+  cout << "int\t"     << iTest << endl ;
+  cout << "float\t"   << fTest << endl ;
   cout << endl ;
   for (unsigned int i = 0 ; i < ivTest.size () ; ++i)
     cout << ivTest.at (i) << " " ;
