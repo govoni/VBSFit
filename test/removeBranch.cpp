@@ -4,8 +4,6 @@
 #include <cmath>
 #include <cctype>
 #include <algorithm>
-#include "ConfigParser.h"
-#include "utils.h"
 #include "TString.h"
 #include "TChain.h"
 #include "TCut.h"
@@ -15,8 +13,6 @@
 #include "TCanvas.h"
 
 #include "histoUtils.h"
-#include "ConfigParser.h"
-#include "utils.h"
 
 #include "TMVA/MsgLogger.h"
 #include "TMVA/Config.h"

@@ -22,10 +22,6 @@
 #include "TTreeFormula.h"
 #include "TGraphAsymmErrors.h"
 
-#include "utils.h"
-#include "ConfigParser.h"
-#include "HistoManager.h"
-#include "plotContainer.h"
 
 using namespace std ;
 

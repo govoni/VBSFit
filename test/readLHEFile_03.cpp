@@ -20,7 +20,6 @@ Fill the cos(theta) histogram for the rotated lepton.
 #include <cmath>
 //#include "hFactory.h"
 //#include "h2Factory.h"
-//#include "hFunctions.h"
 
 #include <map>
 #include <vector>
@@ -252,8 +251,13 @@ int main (int argc, char **argv)
 
         } //PG loop over events
       
-      double scaleFactor = crossSection /ieve ;
-      H1fact.applyToSubset (scaleH1 (-1, scaleFactor), sampleName) ;
+      //PG normalize all histograms to the cross-section:
+      //PG - the integral of the histogram returns the cross-section of the sample
+      //PG - in case of selections, it returns the cross-section of the selected phase space
+      //PG - therefore, bins are integral, i.e. they are not divided by the width
+      double scaleFactor = crossSection / ieve ;
+      H1fact.applyToSubset (scaleH1 (-1, scaleFactor), samplesList.at (i)) ;
+      cout << "scaling " << samplesList.at (i) << " by " << scaleFactor << " = " << crossSection << " / " << ieve << endl ;
     } //PG loop over samples 
 
   delete gConfigParser ;

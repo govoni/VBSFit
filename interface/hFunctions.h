@@ -5,6 +5,7 @@
 #include "hChain.h"
 #include <vector>
 
+
 struct setH1Colors : public std::unary_function<hChain *, void>
 {
   setH1Colors (std::vector<int> colors) :
