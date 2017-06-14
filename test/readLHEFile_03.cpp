@@ -32,6 +32,7 @@ Fill the cos(theta) histogram for the rotated lepton.
 #include "legendre.h"
 #include "geoUtils.h"
 #include "hFactory.h"
+#include "hFunctions.h"
 
 using namespace std ;
 
@@ -153,8 +154,7 @@ int main (int argc, char **argv)
 
   //PG loop over samples
   for (unsigned int i = 0 ; i < samplesList.size () ; ++i)
-      {
-
+    {
       TString sampleName  = gConfigParser->readStringOpt (samplesList.at (i), "LHEfile") ;
       int maxEvents       = gConfigParser->readIntOpt (samplesList.at (i), "maxEvents") ;    
       int maxSelEvents    = gConfigParser->readIntOpt (samplesList.at (i), "maxSelEvents") ;    
@@ -251,8 +251,10 @@ int main (int argc, char **argv)
           H1fact.Fill (samplesList.at (i) + "_cosThetaMu", 0, cos (TLV_mu_rot.Theta ())) ;
 
         } //PG loop over events
-
-      } //PG loop over samples 
+      
+      double scaleFactor = crossSection /ieve ;
+      H1fact.applyToSubset (scaleH1 (-1, scaleFactor), sampleName) ;
+    } //PG loop over samples 
 
   delete gConfigParser ;
   return 0 ;

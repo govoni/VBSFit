@@ -203,7 +203,9 @@ hChain::findNMax ()
 void 
 hChain::Scale (int index, double factor)
 {
-  m_histos.at (index)->Scale (factor) ;
+  if (index > 0) m_histos.at (index)->Scale (factor) ;
+  else 
+  	for (unsigned int i = 0 ; i < m_histos.size () ; ++i) m_histos.at (i)->Scale (factor) ;
 }
 
 

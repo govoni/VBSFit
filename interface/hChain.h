@@ -1,3 +1,10 @@
+/**
+This is a container storing a chain of histograms of the same variable.
+Each histogram corresponds to a given level of selections, 
+the different levels of selections are identified by indices.
+Histograms are by default saved in binned format, they can also be saved in an unbinned format.
+*/
+
 #ifndef hChain_h
 #define hChain_h
 

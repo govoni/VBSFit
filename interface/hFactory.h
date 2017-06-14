@@ -1,3 +1,8 @@
+/**
+This is a container of chains of histograms, meant to ease simple root operations.
+*/
+
+
 #ifndef hFactory_h
 #define hFactory_h
 
@@ -26,6 +31,18 @@ class hFactory
              ++mapIt)
           {
             function (mapIt->second) ;
+          }
+      }
+
+    template <class UnaryFunction>
+    void applyToSubset (UnaryFunction function, TString pattern) 
+      {
+        for (std::map <TString, hChain *>::iterator mapIt = m_H1content.begin () ;
+             mapIt != m_H1content.end () ;
+             ++mapIt)
+          {
+            if (mapIt->first.Contains (pattern))
+              function (mapIt->second) ;
           }
       }
 
