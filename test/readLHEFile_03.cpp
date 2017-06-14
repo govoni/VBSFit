@@ -173,7 +173,7 @@ int main (int argc, char **argv)
       // loop over events
       while ( reader.readEvent () ) 
         {
-          if (ieve % 10000 == 0) std::cout << "  ... event " << ieve << "\n" ;
+          if (ieve % 100000 == 0) std::cout << "  ... event " << ieve << "\n" ;
           if (maxEvents > 0 && ieve >= maxEvents) break ;
           ++ieve;
 
