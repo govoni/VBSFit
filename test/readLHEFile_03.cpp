@@ -136,6 +136,7 @@ int main (int argc, char **argv)
   CfgParser * gConfigParser = new CfgParser (argv[1]) ;
 
   vector<string> samplesList = gConfigParser->readStringListOpt ("general", "samplesList") ;
+  bool saveNtuple = gConfigParser->readBoolOpt ("general", "saveNtuple") ;
 
   gROOT->SetStyle ("Plain") ;
 
@@ -146,9 +147,9 @@ int main (int argc, char **argv)
   for (unsigned int i = 0 ; i < samplesList.size () ; ++i)
     {
       string histoName = samplesList.at (i) + "_cosThetaEl" ;
-      H1fact.add_h1 (histoName, histoName, 200, -1, 1, numOfHistos) ;
+      H1fact.add_h1 (histoName, histoName, 200, -1, 1, numOfHistos, saveNtuple) ;
       histoName = samplesList.at (i) + "_cosThetaMu" ;
-      H1fact.add_h1 (histoName, histoName, 200, -1, 1, numOfHistos) ;
+      H1fact.add_h1 (histoName, histoName, 200, -1, 1, numOfHistos, saveNtuple) ;
     }
 
   //PG loop over samples
