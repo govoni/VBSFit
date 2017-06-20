@@ -1,5 +1,8 @@
 /** 
-example on how to read an ntuple with roofit
+example on how to read an ntuple with roofit, 
+how to build a fitting function done with histograms, 
+how to perform the fit and
+how to plot the results
 */
 
 #include "TProfile2D.h"
@@ -111,12 +114,12 @@ int main (int argc, char ** argv)
   RooRealVar coef_R ("coef_R", "coef_R", 0.5, 0., 10.) ;   
 
   // the fitting function, as sum of the three
-  RooAddPdf fittingFunction ("fittingFunction", "fittingFunction", 
+  RooAddPdf fittingFunction_SM ("fittingFunction_SM", "fittingFunction_SM", 
       RooArgList (f_SM_L_DS, f_SM_0_DS, f_SM_R_DS),
       RooArgList (coef_L, coef_0)
     ) ;  
 
-  fittingFunction.fitTo (*SM_N_DS) ;
+  fittingFunction_SM.fitTo (*SM_N_DS) ;
 
   TCanvas c1 ;
   RooPlot *xplotSM = var.frame () ;
@@ -124,10 +127,10 @@ int main (int argc, char ** argv)
 //  SM_0_DS->plotOn (xplotSM, MarkerStyle (4), MarkerColor (kBlue)) ;
 //  SM_R_DS->plotOn (xplotSM, MarkerStyle (4), MarkerColor (kGreen+2)) ;
   SM_N_DS->plotOn (xplotSM, MarkerColor (kGray+2)) ;
-  fittingFunction.plotOn (xplotSM, LineColor (kGreen)) ;
-  fittingFunction.plotOn (xplotSM, Components (f_SM_L_DS), LineStyle (kDashed), LineColor (kRed)) ;
-  fittingFunction.plotOn (xplotSM, Components (f_SM_0_DS), LineStyle (kDashed), LineColor (kBlue)) ;
-  fittingFunction.plotOn (xplotSM, Components (f_SM_R_DS), LineStyle (kDashed), LineColor (kGreen+2)) ;
+  fittingFunction_SM.plotOn (xplotSM, LineWidth (1), LineColor (kGreen)) ;
+  fittingFunction_SM.plotOn (xplotSM, Components (f_SM_L_DS), LineWidth (1), LineStyle (kDashed), LineColor (kRed)) ;
+  fittingFunction_SM.plotOn (xplotSM, Components (f_SM_0_DS), LineWidth (1), LineStyle (kDashed), LineColor (kBlue)) ;
+  fittingFunction_SM.plotOn (xplotSM, Components (f_SM_R_DS), LineWidth (1), LineStyle (kDashed), LineColor (kGreen+2)) ;
   xplotSM->Draw () ;
   c1.Print ("firstRooFit_SM.pdf","pdf") ;
 
